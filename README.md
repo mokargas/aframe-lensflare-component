@@ -3,7 +3,7 @@
 [![Version](http://img.shields.io/npm/v/aframe-lensflare-component.svg?style=flat-square)](https://npmjs.org/package/aframe-lensflare-component) [![License](http://img.shields.io/npm/l/aframe-lensflare-component.svg?style=flat-square)](https://npmjs.org/package/aframe-lensflare-component)
 
 A component to add a configurable lens-flare (and optional light) to an entity that wraps THREE.JS lens-flares
-
+Demo: https://mokargas.github.io/aframe-lensflare-component
 For [A-Frame](https://aframe.io).
 
 ## API
