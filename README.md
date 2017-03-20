@@ -47,7 +47,7 @@ Install and use by directly including the [browser files](dist):
     <a-sphere id="flare" radius="0.05" color="blue" lensflare="createLight:true; relative: true; src: #flare-asset; position:0.0 0.0 0.06; lightColor:blue" position="-2 2 -4"></a-sphere>
 
 
-    <a-plane id="ground" position="0 0 -4" rotation="-90 0 0" width="8" height="8" color="#111111" material="metalness: 0.7"></a-plane>
+    <a-plane id="ground" position="0 0 -4" rotation="-90 0 0" width="8" height="8" color="#111111" material="metalness: 0.4"></a-plane>
   </a-scene>
 </body>
 ```
