@@ -50,7 +50,7 @@ AFRAME.registerComponent('lensflare', {
         },
         lightAngle: {
             type: 'float',
-            default: 1.5708,
+            default: Math.PI/3,
         },
         lightPenumbra: {
             type: 'float',
@@ -65,7 +65,7 @@ AFRAME.registerComponent('lensflare', {
     /**
      * Set if component needs multiple instancing.
      */
-    multiple: false,
+    multiple: true,
 
     /**
      * Called once when component is attached. Generally for initial setup.
@@ -85,7 +85,7 @@ AFRAME.registerComponent('lensflare', {
         if (this.data.createLight) {
 
             // SpotLight( color, intensity, distance, angle, penumbra, decay )
-            let light = new THREE.SpotLight(new THREE.Color(this.data.lightColor), this.data.intensity, this.data.lightDistance, Math.PI/3, this.data.lightPenumbra, this.data.lightDecay)
+            let light = new THREE.SpotLight(new THREE.Color(this.data.lightColor), this.data.intensity, this.data.lightDistance, this.data.lightAngle, this.data.lightPenumbra, this.data.lightDecay)
 
             //Has a target been supplied?
             let hasTarget = (this.data.target) ? this.data.target : false
