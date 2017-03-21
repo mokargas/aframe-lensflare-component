@@ -29,7 +29,7 @@ AFRAME.registerComponent('lensflare', {
             type: 'string'
         },
         intensity: {
-            type: 'float',
+            type: 'number',
             default: 5
         },
         relative: {
@@ -37,7 +37,7 @@ AFRAME.registerComponent('lensflare', {
             default: true
         },
         size: {
-            type: 'int',
+            type: 'number',
             default: 500
         },
         lightColor: {
@@ -45,19 +45,19 @@ AFRAME.registerComponent('lensflare', {
             default: 'rgb(255, 255, 255)'
         },
         lightDistance: {
-            type: 'float',
+            type: 'number',
             default: 4.0,
         },
         lightAngle: {
-            type: 'float',
+            type: 'number',
             default: Math.PI/3,
         },
         lightPenumbra: {
-            type: 'float',
+            type: 'number',
             default: 0.077,
         },
         lightDecay: {
-            type: 'float',
+            type: 'number',
             default: 1,
         }
     },
@@ -92,10 +92,10 @@ AFRAME.registerComponent('lensflare', {
 
             //Set light target.
             if (hasTarget) {
-                target = document.querySelector(this.data.target).object3D
-                light.target = target
+                light.target = document.querySelector(this.data.target).object3D
             }
 
+            light.position.set(position.x, position.y, position.z)
             scene.add(light)
         }
 
