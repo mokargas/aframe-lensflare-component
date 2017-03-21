@@ -1,6 +1,6 @@
 {
   "name": "aframe-lensflare-component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A component to add a configurable lens-flare (and optional light) to an entity",
   "main": "index.js",
   "cdn": "dist/aframe-lensflare-component.min.js",
