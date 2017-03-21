@@ -92,10 +92,10 @@ AFRAME.registerComponent('lensflare', {
 
             //Set light target.
             if (hasTarget) {
-                target = document.querySelector(this.data.target).object3D
-                light.target = target
+                light.target = document.querySelector(this.data.target).object3D
             }
 
+            light.position.set(position.x, position.y, position.z)
             scene.add(light)
         }
 
