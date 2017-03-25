@@ -59,6 +59,10 @@ AFRAME.registerComponent('lensflare', {
         lightDecay: {
             type: 'number',
             default: 1,
+        },
+        lightType: {
+          default: 'spot',
+          oneOf: ['directional', 'point', 'spot']
         }
     },
 
@@ -68,35 +72,49 @@ AFRAME.registerComponent('lensflare', {
     multiple: true,
 
     /**
+     * setLightType - Create a light based on lightType
+     *
+     * @param  {String} type Type of the light, supplied as a string.
+     * @param  {Object} settings Additional settings to pass to the light. E.g. angle and decay
+     * @return {THREE.Light}  A THREE.JS light object
+     */
+    setLightType: function(type, settings){
+      switch(type){
+        case 'spot':
+          return new THREE.SpotLight(new THREE.Color(settings.lightColor), settings.intensity, settings.lightDistance, settings.lightAngle, settings.lightPenumbra, settings.lightDecay)
+        case 'point':
+          return new THREE.PointLight(new THREE.Color(settings.lightColor), settings.intensity, settings.lightDistance, settings.lightDecay)
+        case 'directional':
+          return new THREE.DirectionalLight(settings.lightColor, settings.intensity)
+    }
+
+    /**
      * Called once when component is attached. Generally for initial setup.
      */
     init: function() {
         const scene = document.querySelector('a-scene').object3D,
         self = this.el.object3D,
-         parentPos = self.position
+        parentPos = self.position
 
         //Determine positioning
         let position = this.data.position
         if (this.data.relative) {
-            position = new THREE.Vector3(parentPos.x + this.data.position.x, parentPos.y + this.data.position.y, parentPos.z + this.data.position.z)
+          position = new THREE.Vector3(parentPos.x + this.data.position.x, parentPos.y + this.data.position.y, parentPos.z + this.data.position.z)
         }
 
         //Determine if the user wants a light
         if (this.data.createLight) {
 
-            // SpotLight( color, intensity, distance, angle, penumbra, decay )
-            let light = new THREE.SpotLight(new THREE.Color(this.data.lightColor), this.data.intensity, this.data.lightDistance, this.data.lightAngle, this.data.lightPenumbra, this.data.lightDecay)
+          let light = setLightType(this.data.lightType.toLowercase())
 
-            //Has a target been supplied?
-            let hasTarget = (this.data.target) ? this.data.target : false
+          //Has a target been supplied?
+          let hasTarget = (this.data.target) ? this.data.target : false
 
-            //Set light target.
-            if (hasTarget) {
-                light.target = document.querySelector(this.data.target).object3D
-            }
+          //Set light target.
+          if (hasTarget) light.target = document.querySelector(this.data.target).object3D
 
-            light.position.set(position.x, position.y, position.z)
-            scene.add(light)
+          light.position.set(position.x, position.y, position.z)
+          scene.add(light)
         }
 
         const textureLoader = new THREE.TextureLoader()
