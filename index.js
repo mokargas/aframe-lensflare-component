@@ -85,9 +85,9 @@ AFRAME.registerComponent('lensflare', {
       case 'point':
         return new THREE.PointLight(new THREE.Color(settings.lightColor), settings.intensity, settings.lightDistance, settings.lightDecay)
       case 'directional':
-        return new THREE.DirectionalLight(settings.lightColor, settings.intensity)
+        return new THREE.DirectionalLight(new THREE.Color(settings.lightColor), settings.intensity)
     }
-  }
+  },
   /**
    * Called once when component is attached. Generally for initial setup.
    */
@@ -97,15 +97,12 @@ AFRAME.registerComponent('lensflare', {
       parentPos = self.position
 
     //Determine positioning
-    let position = this.data.position
-    if (this.data.relative) {
-      position = new THREE.Vector3(parentPos.x + this.data.position.x, parentPos.y + this.data.position.y, parentPos.z + this.data.position.z)
-    }
+    let position = this.data.relative ? new THREE.Vector3(parentPos.x + this.data.position.x, parentPos.y + this.data.position.y, parentPos.z + this.data.position.z) : this.data.position
 
     //Determine if the user wants a light
     if (this.data.createLight) {
 
-      let light = setLightType(this.data.lightType.toLowercase())
+      let light = this.setLightType(this.data.lightType.toLowerCase(), this.data)
 
       //Has a target been supplied?
       let hasTarget = (this.data.target) ? this.data.target : false
@@ -130,8 +127,8 @@ AFRAME.registerComponent('lensflare', {
       }
     )
 
-    let lensFlare = new THREE.LensFlare(textureFlare, this.data.size, 0.0, THREE.AdditiveBlending, new THREE.Color(this.data.lightColor));
-    lensFlare.position.copy(position);
+    let lensFlare = new THREE.LensFlare(textureFlare, this.data.size, 0.0, THREE.AdditiveBlending, new THREE.Color(this.data.lightColor))
+    lensFlare.position.copy(position)
     scene.add(lensFlare)
 
   },
