@@ -6,29 +6,31 @@
     <script src="../build.js"></script>
 </head>
 
-<body>
+<body style="background-color: #030404">
     <a-scene>
         <a-assets>
             <img src="images/flare.jpg" alt="Test Lensflare Asset" id="flare-asset">
             <img src="images/flare2.jpg" alt="Test Lensflare Asset 2" id="flare-asset-2">
+            <img src="images/sky.jpg" alt="Skymap" id="skymap">
+            <img src="images/floor.jpg" alt="Floor" id="floor">
 
         </a-assets>
-        <a-sky color="#000000"></a-sky>
+        <a-entity id="sky" geometry="primitive:sphere; radius:14; phiLength:360; phiStart:0; thetaLength:90" material="shader:flat; side:back; height:2048; src:#skymap; width:2048"></a-entity>
 
         <a-sphere id="flare-1" radius="0.05" color="red" lensflare="createLight:true; relative: true; src: #flare-asset; position:0.0 0.0 0.06; lightColor:red; lightAngle: 3.14/3" position="2 2 -4"></a-sphere>
-        <a-sphere id="flare-2" radius="0.05" lensflare="createLight:true; relative: true; src: #flare-asset-2; position:0.0 0.0 0.06; intensity: 8; target:#ground; lightAngle: 3.14/3" position="0 2 -4"></a-sphere>
+        <a-sphere id="flare-2" radius="0.05" lensflare="createLight:true; relative: true; src: #flare-asset-2; position:0.0 0.0 0.06; intensity: 4; target:#ground; lightAngle: 3.14/3" position="0 2 -4"></a-sphere>
         <a-sphere id="flare-3" radius="0.05" color="cyan" lensflare="createLight:true; relative: true; src: #flare-asset; position:0.0 0.0 0.06; lightColor:cyan; target:#ground; lightAngle: 3.14/3" position="-2 2 -4"></a-sphere>
 
         <!-- Attach a flare to existing light -->
         <a-light id="flare-4" color="grey" lensflare="createLight:false; relative: true; src: #flare-asset; position:0.0 0.0 0.06;" position="0 4 -4"></a-light>
 
         <!-- Create a flare with a THREE.JS Point light -->
-        <a-sphere id="flare-5" radius="0.05" color="green" lensflare="createLight:true; relative: true; src: #flare-asset; position:0.0 0.0 0.06; lightType: point; lightColor:green; target:#ground; lightAngle: 3.14/3" position="-2 4 -4"></a-sphere>
+        <a-sphere id="flare-5" radius="0.05" color="green" lensflare="createLight:true; relative: true; src: #flare-asset; position:0.0 0.0 0.06; intensity:8; lightType: point; lightColor:green; target:#ground; lightAngle: 3.14/3" position="-2 4 -4"></a-sphere>
 
         <!-- And another ...  -->
         <a-sphere id="flare-6" radius="0.05" color="gold" lensflare="createLight:true; relative: true; src: #flare-asset-2; position:0.0 0.0 0.06; lightType: point; lightColor:gold; target:#ground; lightAngle: 3.14/3" position="2 4 -4"></a-sphere>
 
-        <a-plane id="ground" position="0 0 -4" rotation="-90 0 0" width="8" height="8" color="#111111" material="metalness: 0.7"></a-plane>
+        <a-entity id="ground" geometry="primitive: box; width: 20; height: 0.01; depth: 20" material="src: #floor; roughness:1"  position="0 0 -4"></a-entity>
     </a-scene>
 
     <!-- GitHub Corner. -->
