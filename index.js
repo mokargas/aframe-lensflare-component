@@ -14,7 +14,6 @@ if (typeof THREE === 'undefined') {
  */
 AFRAME.registerComponent('lensflare', {
   schema: {
-    //Image to use
     src: {
       type: 'asset'
     },
@@ -119,7 +118,6 @@ AFRAME.registerComponent('lensflare', {
     this.lensFlare = new THREE.LensFlare(textureFlare, this.data.size, 0.0, THREE.AdditiveBlending, new THREE.Color(this.data.lightColor))
     this.lensFlare.position.copy(position)
 
-
     //Determine if the user wants a light
     if (this.data.createLight) {
 
@@ -132,6 +130,7 @@ AFRAME.registerComponent('lensflare', {
       if (hasTarget) light.target = document.querySelector(this.data.target).object3D
       light.position.set(position.x, position.y, position.z)
 
+      //If relative, we want to attach the lensflare, and the light as child objects and call updateMatrixWorld once.
       if(this.data.relative){
         THREE.SceneUtils.attach(light, sceneEl, parentEl)
         THREE.SceneUtils.attach(this.lensFlare, sceneEl, parentEl)

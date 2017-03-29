@@ -27,7 +27,7 @@
     <a-sphere id="flare-2" radius="0.05" lensflare="createLight:true; size:133; relative: true; src: #flare-asset-2; position:0.0 0.0 0.06; intensity: 4; target:#ground; lightAngle: 3.14/3" position="0 2 -8">
 
     </a-sphere>
-    <a-sphere id="flare-3" radius="0.05" color="cyan" lensflare="createLight:true; size:90; relative: true; src: #flare-asset; position:0.0 0.0 0.06; lightColor:cyan; target:#ground; lightAngle: 3.14/3" position="-4 2 -8"></a-sphere>
+    <a-sphere id="flare-3" radius="0.05" color="cyan" lensflare="createLight:true; size:200; relative: true; src: #flare-asset; intensity:9; position:0.0 0.0 0.06; lightColor:cyan; target:#ground; lightAngle: 3.14/3" position="-4 2 -8"></a-sphere>
 
     <!-- Attach a flare to existing light -->
     <a-light id="flare-4" color="grey" lensflare="createLight:false; relative: true; src: #flare-asset-3; position:0.0 0.0 0.06;" position="-3 9 -6">
@@ -38,9 +38,9 @@
     <a-sphere id="flare-5" radius="0.05" color="grey" lensflare="createLight:true; relative: true; size:220; src: #flare-asset; position:0.0 0.0 0.06; intensity:8; lightType: point; lightColor:grey; target:#ground; lightAngle: 3.14/4" position="-6 5 -11"></a-sphere>
 
     <!-- And another ...  -->
-    <a-sphere id="flare-6" radius="0.05" color="gold" lensflare="createLight:true; relative: true; size:100; src: #flare-asset-2; position:0.0 0.0 0.06; lightType: point; lightColor:gold; target:#ground; lightAngle: 3.14/3" position="4 8 -8"></a-sphere>
+    <a-sphere id="flare-6" radius="0.05" color="gold" lensflare="createLight:true; relative: true; size:300; src: #flare-asset-2; position:0.0 0.0 0.06; lightType: point; lightColor:gold; target:#ground; lightAngle: 3.14/3" position="4 8 -8"></a-sphere>
 
-    <a-entity id="ground" geometry="primitive: box; width: 20; height: 0.01; depth: 20" material="src: #floor; roughness:1" position="0 0 -4"></a-entity>
+    <a-entity id="ground" geometry="primitive: box; width: 20; height: 0.01; depth: 20" material="src: #floor;" position="0 0 -4"></a-entity>
   </a-scene>
 
   <!-- GitHub Corner. -->
