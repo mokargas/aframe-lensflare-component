@@ -13,15 +13,16 @@ Property      | Description                                                     
 src           | Asset Image to use                                                                                            | none
 createLight   | Whether to create a light along with this flare                                                               | true
 position      | This is the position of the flare.                                                                            | true
-relative      | Whether to position this flare relative to the parent entity (The position property above becomes an offset ) | true
+relative      | Whether to position this flare relative to the parent entity (The position property above becomes an *offset* ) | true
 target        | DOM id of the object to point the Flare's spotlight at                                                        | none
-size          | Size of the flare graphic                                                                                     | 500
-intensity     | Intensity of the light emitted (if enabled)                                                                   | 5
-lightColor    | Color of the light (if enabled) and flare                                                                     | 'rgb(255, 255, 255)'
+size          | Size of the flare graphic (Use power of 2 images for best results)                                                                                     | 500
+intensity     | If using `createLight:true`, this is the intensity of the light emitted | 5
+lightType     | If using `createLight:true`, this is a string corresponding to A-Frame light types. Either  'directional', 'point', 'spot'                                                    | 'spot'
+lightColor    | If `createLight:true`, Color of the light and (currently) flare tint                                                                     | 'rgb(255, 255, 255)'
 lightDistance | Distance of the light (if enabled)                                                                            | 500
-lightAngle    | Maximum extent of the light in radians( from its direction )                                                  | PI/3
-lightPenumbra | Percent of the light cone that is attenuated due to penumbra. Takes values between zero and 1.                | 0.077
-lightDecay    | The amount the light dims along the light's distance                                                          | 1
+lightAngle    | Maximum extent of the light in radians (from its direction). Valid for directional and spotlight type lights                                                  | PI/3
+lightPenumbra | If using `createLight:true`: Percent of the light cone that is attenuated due to penumbra. Takes values between zero and 1. Valid only for spotlights               | 0.077
+lightDecay    | If using `createLight:true`: The amount the light dims along the light's distance                                                          | 1
 
 ## Installation
 
@@ -67,9 +68,14 @@ Then require and use.
 ```javascript
 require('aframe');
 require('aframe-lensflare-component');
+
+//Or if supported by your stack (babel, webpack):
+
+import 'aframe';
+import 'aframe-lensflare-component';
+
 ```
 
 ## TODO
 
-- More configurable light options (Spot, Amb, Directional)
 - Seperate Flare colorisation and Light Color
