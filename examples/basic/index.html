@@ -30,8 +30,8 @@
     <a-sphere id="flare-3" radius="0.05" color="cyan" lensflare="createLight:true; size:200; relative: true; src: #flare-asset; intensity:9; position:0.0 0.0 0.06; lightColor:cyan; target:#ground; lightAngle: 3.14/3" position="-4 2 -8"></a-sphere>
 
     <!-- Attach a flare to existing light -->
-    <a-light id="flare-4" color="grey" lensflare="createLight:false; relative: true; src: #flare-asset-3; position:0.0 0.0 0.06;" position="-3 9 -6">
-      <a-animation attribute="position" to="-3 10 -9" repeat="indefinite" easing="ease-in-out" direction="alternate" dur="4096"></a-animation>
+    <a-light id="flare-4" color="grey" lensflare="createLight:false; relative: true; src: #flare-asset-3; position:0.0 0.0 0.06; intensity:15" position="-3 9 -6">
+      <a-animation attribute="position" to="0 10 -9" repeat="indefinite" easing="ease-in-out" direction="alternate" dur="2048"></a-animation>
     </a-light>
 
     <!-- Create a flare with a THREE.JS Point light -->
