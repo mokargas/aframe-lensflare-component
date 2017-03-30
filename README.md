@@ -7,7 +7,7 @@ Examples: [See Here] (https://mokargas.github.io/aframe-lensflare-component)
 
 For [A-Frame](https://aframe.io).
 
-![Example of Lensflares](https://github.com/mokargas/aframe-lensflare-component/tree/dev/examples/basic/images/aframe-lensflare-low.gif "Example of Lensflares")
+![Example of Lensflares](https://raw.githubusercontent.com/mokargas/aframe-lensflare-component/master/examples/basic/images/aframe-lensflare-low.gif "Example of Lensflares")
 
 ## API
 
