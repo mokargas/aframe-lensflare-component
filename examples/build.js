@@ -1,156 +1,187 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
 require('aframe');
 require('../index.js');
 
 },{"../index.js":2,"aframe":3}],2:[function(require,module,exports){
+'use strict';
+
 /* global AFRAME */
 /* global THREE */
 
 if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.')
+  throw new Error('Component attempted to register before AFRAME was available.');
 }
 
 if (typeof THREE === 'undefined') {
-    throw new Error('Component attempted to register before THREE was available.')
+  throw new Error('Component attempted to register before THREE was available.');
 }
 
 /**
  * A-Frame Lensflare Component component for A-Frame.
  */
 AFRAME.registerComponent('lensflare', {
-    schema: {
-        //Image to use
-        src: {
-            type: 'asset'
-        },
-        createLight: {
-            type: 'boolean',
-            default: true
-        },
-        position: {
-            type: 'vec3'
-        },
-        target: {
-            type: 'string'
-        },
-        intensity: {
-            type: 'number',
-            default: 5
-        },
-        relative: {
-            type: 'boolean',
-            default: true
-        },
-        size: {
-            type: 'number',
-            default: 500
-        },
-        lightColor: {
-            type: 'string',
-            default: 'rgb(255, 255, 255)'
-        },
-        lightDistance: {
-            type: 'number',
-            default: 4.0,
-        },
-        lightAngle: {
-            type: 'number',
-            default: Math.PI/3,
-        },
-        lightPenumbra: {
-            type: 'number',
-            default: 0.077,
-        },
-        lightDecay: {
-            type: 'number',
-            default: 1,
-        }
+  schema: {
+    src: {
+      type: 'asset'
     },
+    createLight: {
+      type: 'boolean',
+      default: true
+    },
+    position: {
+      type: 'vec3'
+    },
+    target: {
+      type: 'string'
+    },
+    intensity: {
+      type: 'number',
+      default: 5
+    },
+    relative: {
+      type: 'boolean',
+      default: true
+    },
+    size: {
+      type: 'number',
+      default: 500
+    },
+    lightColor: {
+      type: 'string',
+      default: 'rgb(255, 255, 255)'
+    },
+    lightDistance: {
+      type: 'number',
+      default: 4.0
+    },
+    lightAngle: {
+      type: 'number',
+      default: Math.PI / 3
+    },
+    lightPenumbra: {
+      type: 'number',
+      default: 0.077
+    },
+    lightDecay: {
+      type: 'number',
+      default: 1
+    },
+    lightType: {
+      default: 'spot',
+      oneOf: ['directional', 'point', 'spot']
+    }
+  },
 
-    /**
-     * Set if component needs multiple instancing.
-     */
-    multiple: true,
+  /**
+   * Set if component needs multiple instancing.
+   */
+  multiple: true,
 
-    /**
-     * Called once when component is attached. Generally for initial setup.
-     */
-    init: function() {
-        const scene = document.querySelector('a-scene').object3D,
+  /**
+   * setLightType - Create a light based on lightType
+   *
+   * @param  {String} type Type of the light, supplied as a string.
+   * @param  {Object} settings Additional settings to pass to the light. E.g. angle and decay
+   * @return {THREE.Light}  A THREE.JS light object
+   */
+  setLightType: function setLightType(type, settings) {
+    switch (type) {
+      case 'spot':
+        return new THREE.SpotLight(new THREE.Color(settings.lightColor), settings.intensity, settings.lightDistance, settings.lightAngle, settings.lightPenumbra, settings.lightDecay);
+      case 'point':
+        return new THREE.PointLight(new THREE.Color(settings.lightColor), settings.intensity, settings.lightDistance, settings.lightDecay);
+      case 'directional':
+        return new THREE.DirectionalLight(new THREE.Color(settings.lightColor), settings.intensity);
+    }
+  },
+  /**
+   * Called once when component is attached. Generally for initial setup.
+   */
+  init: function init() {
+    var scene = document.querySelector('a-scene').object3D,
         self = this.el.object3D,
-         parentPos = self.position
+        parentPos = self.position;
 
-        //Determine positioning
-        let position = this.data.position
-        if (this.data.relative) {
-            position = new THREE.Vector3(parentPos.x + this.data.position.x, parentPos.y + this.data.position.y, parentPos.z + this.data.position.z)
-        }
+    var parentEl = this.el.object3D,
+        sceneEl = this.el.sceneEl.object3D;
 
-        //Determine if the user wants a light
-        if (this.data.createLight) {
+    //Determine positioning
+    var position = this.data.relative ? new THREE.Vector3(parentPos.x + this.data.position.x, parentPos.y + this.data.position.y, parentPos.z + this.data.position.z) : this.data.position;
 
-            // SpotLight( color, intensity, distance, angle, penumbra, decay )
-            let light = new THREE.SpotLight(new THREE.Color(this.data.lightColor), this.data.intensity, this.data.lightDistance, this.data.lightAngle, this.data.lightPenumbra, this.data.lightDecay)
+    //Load texture
+    var textureLoader = new THREE.TextureLoader();
+    var textureFlare = textureLoader.load(this.data.src, function (texture) {
+      return texture;
+    }, function (xhr) {
+      //console.log((xhr.loaded / xhr.total * 100) + '% loaded')
+    }, function (xhr) {
+      throw new Error('An error occured loading the Flare texture');
+    });
 
-            //Has a target been supplied?
-            let hasTarget = (this.data.target) ? this.data.target : false
+    this.lensFlare = new THREE.LensFlare(textureFlare, this.data.size, 0.0, THREE.AdditiveBlending, new THREE.Color(this.data.lightColor));
+    this.lensFlare.position.copy(position);
 
-            //Set light target.
-            if (hasTarget) {
-                light.target = document.querySelector(this.data.target).object3D
-            }
+    //Determine if the user wants a light
+    if (this.data.createLight) {
 
-            light.position.set(position.x, position.y, position.z)
-            scene.add(light)
-        }
+      var light = this.setLightType(this.data.lightType.toLowerCase(), this.data);
 
-        const textureLoader = new THREE.TextureLoader()
-        const textureFlare = textureLoader.load(this.data.src,
-            function(texture) {
-                return texture
-            },
-            function(xhr) {
-                //console.log((xhr.loaded / xhr.total * 100) + '% loaded')
-            },
-            function(xhr) {
-                throw new Error('An error occured loading the Flare texture')
-            }
-        )
+      //Has a target been supplied?
+      var hasTarget = this.data.target ? this.data.target : false;
 
-        let lensFlare = new THREE.LensFlare(textureFlare, this.data.size, 0.0, THREE.AdditiveBlending, new THREE.Color(this.data.lightColor));
-        lensFlare.position.copy(position);
-        scene.add(lensFlare)
+      //Set light target.
+      if (hasTarget) light.target = document.querySelector(this.data.target).object3D;
+      light.position.set(position.x, position.y, position.z);
 
-    },
+      //If relative, we want to attach the lensflare, and the light as child objects and call updateMatrixWorld once.
+      if (this.data.relative) {
+        THREE.SceneUtils.attach(light, sceneEl, parentEl);
+        THREE.SceneUtils.attach(this.lensFlare, sceneEl, parentEl);
+        sceneEl.updateMatrixWorld();
+      } else {
+        scene.add(light);
+      }
+    } else {
+      //If relative, we want to attach the lensflare as a child object. This is so our lensflare works with animation updates.
+      if (this.data.relative) {
+        THREE.SceneUtils.attach(this.lensFlare, sceneEl, parentEl);
+        sceneEl.updateMatrixWorld();
+      } else {
+        scene.add(this.lensFlare);
+      }
+    }
+  },
 
-    /**
-     * Called when component is attached and when component data changes.
-     * Generally modifies the entity based on the data.
-     */
-    update: function(oldData) {},
+  /**
+   * Called when component is attached and when component data changes.
+   * Generally modifies the entity based on the data.
+   */
+  update: function update(oldData) {},
 
-    /**
-     * Called when a component is removed (e.g., via removeAttribute).
-     * Generally undoes all modifications to the entity.
-     */
-    remove: function() {},
+  /**
+   * Called when a component is removed (e.g., via removeAttribute).
+   * Generally undoes all modifications to the entity.
+   */
+  remove: function remove() {},
 
-    /**
-     * Called on each scene tick.
-     */
-    // tick: function (t) { },
+  /**
+   * Called on each scene tick.
+   */
+  // tick: function (t) { },
 
-    /**
-     * Called when entity pauses.
-     * Use to stop or remove any dynamic or background behavior such as events.
-     */
-    pause: function() {},
+  /**
+   * Called when entity pauses.
+   * Use to stop or remove any dynamic or background behavior such as events.
+   */
+  pause: function pause() {},
 
-    /**
-     * Called when entity resumes.
-     * Use to continue or add any dynamic or background behavior such as events.
-     */
-    play: function() {}
+  /**
+   * Called when entity resumes.
+   * Use to continue or add any dynamic or background behavior such as events.
+   */
+  play: function play() {}
 });
 
 },{}],3:[function(require,module,exports){
