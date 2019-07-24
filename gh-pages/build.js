@@ -357,8 +357,6 @@ AFRAME.registerComponent('lensflare', {
   init: function init() {
 
     var scene = document.querySelector('a-scene').object3D;
-    var self = this.el.object3D;
-    var parentPos = self.position;
     var parentEl = this.el.object3D;
     var sceneEl = this.el.sceneEl.object3D;
 
