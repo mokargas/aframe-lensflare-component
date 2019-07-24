@@ -57,6 +57,7 @@
 	  throw new Error('Component attempted to register before THREE was available.');
 	}
 	
+	//https://github.com/mrdoob/three.js/blob/master/examples/js/objects/Lensflare.js
 	__webpack_require__(1);
 	
 	/**
@@ -145,12 +146,11 @@
 	    var scene = document.querySelector('a-scene').object3D;
 	    var self = this.el.object3D;
 	    var parentPos = self.position;
-	
 	    var parentEl = this.el.object3D;
 	    var sceneEl = this.el.sceneEl.object3D;
 	
 	    //Determine positioning
-	    var position = this.data.relative ? new THREE.Vector3(parentPos.x + this.data.position.x, parentPos.y + this.data.position.y, parentPos.z + this.data.position.z) : this.data.position;
+	    var position = this.data.relative ? new THREE.Vector3(0, 0, 0) : this.data.position;
 	
 	    //Load texture (Three r84 upward doesn't support progress)
 	    var textureLoader = new THREE.TextureLoader();
@@ -160,7 +160,9 @@
 	      throw new Error('An error occured loading the Flare texture');
 	    });
 	
-	    this.lensFlare = new THREE.Lensflare(textureFlare, this.data.size, 0.0, THREE.AdditiveBlending, new THREE.Color(this.data.lightColor));
+	    this.lensFlare = new THREE.Lensflare();
+	    this.lensFlareElement = new THREE.LensflareElement(textureFlare, this.data.size, 0.0, new THREE.Color(this.data.lightColor));
+	    this.lensFlare.addElement(this.lensFlareElement);
 	    this.lensFlare.position.copy(position);
 	
 	    //Determine if the user wants a light
@@ -172,13 +174,17 @@
 	      var hasTarget = this.data.target ? this.data.target : false;
 	
 	      //Set light target.
-	      if (hasTarget) light.target = document.querySelector(this.data.target).object3D;
+	      if (hasTarget) {
+	        light.target = document.querySelector(this.data.target).object3D;
+	        sceneEl.add(light.target);
+	        sceneEl.updateMatrixWorld();
+	      }
 	      light.position.set(position.x, position.y, position.z);
 	
 	      //If relative, we want to attach the lensflare, and the light as child objects and call updateMatrixWorld once.
 	      if (this.data.relative) {
-	        parentEl.attach(light);
-	        parentEl.attach(this.lensFlare);
+	        light.add(this.lensFlare);
+	        parentEl.add(light);
 	        sceneEl.updateMatrixWorld();
 	      } else {
 	        scene.add(light);
@@ -186,7 +192,7 @@
 	    } else {
 	      //If relative, we want to attach the lensflare as a child object. This is so our lensflare works with animation updates.
 	      if (this.data.relative) {
-	        parentEl.attach(this.lensFlare);
+	        parentEl.add(this.lensFlare);
 	        sceneEl.updateMatrixWorld();
 	      } else {
 	        scene.add(this.lensFlare);
