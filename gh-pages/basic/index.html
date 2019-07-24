@@ -16,10 +16,12 @@
       <img src="images/flare2.jpg" alt="Test Lensflare Asset 2" id="flare-asset-2">
       <img src="images/flare3.jpg" alt="Test Lensflare Asset 3" id="flare-asset-3">
 
-      <img src="images/sky.jpg" alt="Skymap" id="skymap">
+      <img src="images/sky2.jpg" alt="Skymap" id="skymap">
       <img src="images/floor.jpg" alt="Floor" id="floor">
 
     </a-assets>
+      <a-sky src="#skymap"></a-sky>
+
     <a-sphere id="flare-1" radius="0.05" color="red" lensflare="createLight:true; relative: true; size:210; src: #flare-asset; position:0.0 0.0 0.06; lightColor:red; lightAngle: 3.14/3" position="4 2 -3">
       <a-animation attribute="position" to="4 2 -10" repeat="indefinite" easing="ease-in-out" direction="alternate" dur="4096"></a-animation>
     </a-sphere>

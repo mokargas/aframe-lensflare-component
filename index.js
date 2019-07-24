@@ -9,6 +9,9 @@ if (typeof THREE === 'undefined') {
   throw new Error('Component attempted to register before THREE was available.')
 }
 
+//https://github.com/mrdoob/three.js/blob/master/examples/js/objects/Lensflare.js
+require('./Lensflare')
+
 /**
  * A-Frame Lensflare Component component for A-Frame.
  */
@@ -77,7 +80,7 @@ AFRAME.registerComponent('lensflare', {
    * @param  {Object} settings Additional settings to pass to the light. E.g. angle and decay
    * @return {THREE.Light}  A THREE.JS light object
    */
-  setLightType: function(type, settings) {
+  setLightType: function (type, settings) {
     switch (type) {
       case 'spot':
         return new THREE.SpotLight(new THREE.Color(settings.lightColor), settings.intensity, settings.lightDistance, settings.lightAngle, settings.lightPenumbra, settings.lightDecay)
@@ -90,58 +93,64 @@ AFRAME.registerComponent('lensflare', {
   /**
    * Called once when component is attached. Generally for initial setup.
    */
-  init: function() {
-    const scene = document.querySelector('a-scene').object3D,
-      self = this.el.object3D,
-      parentPos = self.position
+  init: function () {
 
-    let parentEl = this.el.object3D,
-    sceneEl = this.el.sceneEl.object3D
+    const scene = document.querySelector('a-scene').object3D;
+    const self = this.el.object3D
+    const parentPos = self.position
+    const parentEl = this.el.object3D
+    const sceneEl = this.el.sceneEl.object3D
 
     //Determine positioning
-    let position = this.data.relative ? new THREE.Vector3(parentPos.x + this.data.position.x, parentPos.y + this.data.position.y, parentPos.z + this.data.position.z) : this.data.position
+    const position = this.data.relative ? new THREE.Vector3(0, 0, 0) : this.data.position
 
-    //Load texture
+    //Load texture (Three r84 upward doesn't support progress)
     const textureLoader = new THREE.TextureLoader()
-    const textureFlare = textureLoader.load(this.data.src,
-      function(texture) {
+    const textureFlare = textureLoader.load(this.data.src.currentSrc,
+      function (texture) {
         return texture
       },
-      function(xhr) {
-        //console.log((xhr.loaded / xhr.total * 100) + '% loaded')
-      },
-      function(xhr) {
+      undefined,
+      function (error) {
         throw new Error('An error occured loading the Flare texture')
       }
     )
 
-    this.lensFlare = new THREE.LensFlare(textureFlare, this.data.size, 0.0, THREE.AdditiveBlending, new THREE.Color(this.data.lightColor))
+    this.lensFlare = new THREE.Lensflare()
+    this.lensFlareElement = new THREE.LensflareElement(textureFlare, this.data.size, 0.0, new THREE.Color(this.data.lightColor))
+    this.lensFlare.addElement(this.lensFlareElement);
     this.lensFlare.position.copy(position)
+
+
 
     //Determine if the user wants a light
     if (this.data.createLight) {
 
-      let light = this.setLightType(this.data.lightType.toLowerCase(), this.data)
+      const light = this.setLightType(this.data.lightType.toLowerCase(), this.data)
 
       //Has a target been supplied?
-      let hasTarget = (this.data.target) ? this.data.target : false
+      const hasTarget = this.data.target ? this.data.target : false
 
       //Set light target.
-      if (hasTarget) light.target = document.querySelector(this.data.target).object3D
+      if (hasTarget) {
+        light.target = document.querySelector(this.data.target).object3D
+        sceneEl.add(light.target)
+        sceneEl.updateMatrixWorld()
+      }
       light.position.set(position.x, position.y, position.z)
 
       //If relative, we want to attach the lensflare, and the light as child objects and call updateMatrixWorld once.
-      if(this.data.relative){
-        THREE.SceneUtils.attach(light, sceneEl, parentEl)
-        THREE.SceneUtils.attach(this.lensFlare, sceneEl, parentEl)
+      if (this.data.relative) {
+        light.add(this.lensFlare)
+        parentEl.add(light)
         sceneEl.updateMatrixWorld()
       } else {
         scene.add(light)
       }
     } else {
       //If relative, we want to attach the lensflare as a child object. This is so our lensflare works with animation updates.
-      if(this.data.relative){
-        THREE.SceneUtils.attach(this.lensFlare, sceneEl, parentEl)
+      if (this.data.relative) {
+        parentEl.add(this.lensFlare)
         sceneEl.updateMatrixWorld()
       } else {
         scene.add(this.lensFlare)
@@ -155,7 +164,7 @@ AFRAME.registerComponent('lensflare', {
    * Called when component is attached and when component data changes.
    * Generally modifies the entity based on the data.
    */
-  update: function(oldData) {
+  update: function (oldData) {
 
   },
 
@@ -163,7 +172,7 @@ AFRAME.registerComponent('lensflare', {
    * Called when a component is removed (e.g., via removeAttribute).
    * Generally undoes all modifications to the entity.
    */
-  remove: function() {},
+  remove: function () { },
 
   /**
    * Called on each scene tick.
@@ -174,11 +183,11 @@ AFRAME.registerComponent('lensflare', {
    * Called when entity pauses.
    * Use to stop or remove any dynamic or background behavior such as events.
    */
-  pause: function() {},
+  pause: function () { },
 
   /**
    * Called when entity resumes.
    * Use to continue or add any dynamic or background behavior such as events.
    */
-  play: function() {}
+  play: function () { }
 });

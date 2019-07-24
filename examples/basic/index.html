@@ -8,20 +8,22 @@
 
 <body style="background-color: #000000">
   <a-scene>
-    <a-camera fov="90" rotation="13.75 -0.23 0">
+    <a-entity fov="90" rotation="13.75 -0.23 0">
       <a-cursor></a-cursor>
-    </a-camera>
+    </a-entity>
     <a-assets>
       <img src="images/flare.jpg" alt="Test Lensflare Asset" id="flare-asset">
       <img src="images/flare2.jpg" alt="Test Lensflare Asset 2" id="flare-asset-2">
       <img src="images/flare3.jpg" alt="Test Lensflare Asset 3" id="flare-asset-3">
 
-      <img src="images/sky.jpg" alt="Skymap" id="skymap">
+      <img src="images/sky2.jpg" alt="Skymap" id="skymap">
       <img src="images/floor.jpg" alt="Floor" id="floor">
 
     </a-assets>
-    <a-sphere id="flare-1" radius="0.05" color="red" lensflare="createLight:true; relative: true; size:210; src: #flare-asset; position:0.0 0.0 0.06; lightColor:red; lightAngle: 3.14/3" position="4 2 -3">
-      <a-animation attribute="position" to="4 2 -10" repeat="indefinite" easing="ease-in-out" direction="alternate" dur="4096"></a-animation>
+    <a-sky src="#skymap" rotation="-43.253 0 0"></a-sky>
+
+    <a-sphere id="flare-1" radius="0.05" color="red" lensflare="createLight: true; relative: true; size:210; src: #flare-asset; position:0.0 0.0 0.06; lightColor:red; lightAngle: 3.14/3" position="4 2 -3" animation="property: position; to: 4 2 -10; loop: true; easing: easeInOutQuad; dir: alternate; dur: 4096">
+
     </a-sphere>
 
     <a-sphere id="flare-2" radius="0.05" lensflare="createLight:true; size:133; relative: true; src: #flare-asset-2; position:0.0 0.0 0.06; intensity: 4; target:#ground; lightAngle: 3.14/3" position="0 2 -8">
@@ -30,12 +32,11 @@
     <a-sphere id="flare-3" radius="0.05" color="cyan" lensflare="createLight:true; size:200; relative: true; src: #flare-asset; intensity:9; position:0.0 0.0 0.06; lightColor:cyan; target:#ground; lightAngle: 3.14/3" position="-4 2 -8"></a-sphere>
 
     <!-- Attach a flare to existing light -->
-    <a-light id="flare-4" color="grey" lensflare="createLight:false; relative: true; src: #flare-asset-3; position:0.0 0.0 0.06; intensity:15" position="-3 9 -6">
-      <a-animation attribute="position" to="0 10 -9" repeat="indefinite" easing="ease-in-out" direction="alternate" dur="2048"></a-animation>
+    <a-light id="flare-4" color="grey" lensflare="createLight: false; relative: true; src: #flare-asset-3; position:0.0 0.0 0.06; intensity:15" position="-3 9 -6" animation="property: position; to:0 10 -9;loop:true; easing: easeInOutQuad; dir: alternate; dur:2048">
     </a-light>
 
     <!-- Create a flare with a THREE.JS Point light -->
-    <a-sphere id="flare-5" radius="0.05" color="grey" lensflare="createLight:true; relative: true; size:220; src: #flare-asset; position:0.0 0.0 0.06; intensity:8; lightType: point; lightColor:grey; target:#ground; lightAngle: 3.14/4" position="-6 5 -11"></a-sphere>
+    <a-sphere id="flare-5" radius="0.05" color="grey" lensflare="createLight: true; relative: true; size:220; src: #flare-asset; position:0.0 0.0 0.06; intensity:8; lightType: point; lightColor:grey; target:#ground; lightAngle: 3.14/4" position="-6 5 -11"></a-sphere>
 
     <!-- And another ...  -->
     <a-sphere id="flare-6" radius="0.05" color="gold" lensflare="createLight:true; relative: true; size:300; src: #flare-asset-2; position:0.0 0.0 0.06; lightType: point; lightColor:gold; target:#ground; lightAngle: 3.14/3" position="4 8 -8"></a-sphere>
@@ -78,4 +79,5 @@
       }
     }
 
-    <!-- End GitHub Corner. --></body></html>
+    <!-- End GitHub Corner -->
+    </body></html>
